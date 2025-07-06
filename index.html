@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lakeview Community Church</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --accent: #f1c40f;
+      --light: #ffffff;
+      --dark: #2c3e50;
+      --bg: #f9f9f9;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.7;
+      scroll-behavior: smooth;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 0 1rem;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--primary);
+      color: var(--light);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-links a {
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+    .hero {
+      position: relative;
+      height: 100vh;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-position: center;
+      background-size: cover;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+      z-index: 0;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+    /* Removed overlay background */
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      /* background: rgba(0, 0, 0, 0.5); */
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      max-width: 700px;
+      z-index: 3;
+      /* Removed backdrop-filter and background */
+      padding: 2rem 3rem;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+    .btn {
+      background: var(--accent);
+      color: var(--dark);
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #e1b90e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    h2::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
+    .section {
+      padding: 4rem 2rem;
+    }
+    .light {
+      background: white;
+    }
+    .dark {
+      background: var(--primary);
+      color: white;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #verseText {
+      font-size: 1.5rem;
+      font-style: italic;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      transition: opacity 0.5s ease;
+    }
+
+    footer {
+      padding: 2rem;
+      background: var(--primary);
+      color: white;
+      text-align: center;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: auto;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      padding: 0.75rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .success-message {
+      display: none;
+      background: #e6f4ea;
+      color: #2e7d32;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    /* YouTube & Donation sections styling */
+    #youtube iframe {
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    #donate div {
+      background: rgba(255,255,255,0.05);
+      padding: 1.5rem;
+      border-radius: 8px;
+      color: white;
+    }
+    #donate h4 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    #donate a.btn {
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    @media (max-width: 768px) {
+      .menu-icon {
+        display: block;
+      }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: var(--primary);
+        padding: 1rem;
+      }
+      .nav-links.open {
+        display: flex;
+      }
+      .top-nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .hero-content {
+        padding: 1.5rem 2rem;
+      }
+      /* Location section stacks vertically */
+      #address .container {
+        flex-direction: column !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="logo">Lakeview Community Church</div>
+    <div class="menu-icon" id="menu-toggle">☰</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#audio">Sermons</a>
+      <a href="#verse">Verse</a>
+      <a href="#address">Location</a>
+      <a href="#youtube">Watch</a>
+      <a href="#donate">Donate</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <header class="hero fade-in">
+    <!-- Hero carousel slides -->
+    <div class="hero-slide active" style="background-image: url('./Photos/Header\ 1.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('./Photos/Header\ 2.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('./Photos/Header\ 3.jpg');"></div>
+
+    <!-- Dots -->
+    <div class="carousel-dots" style="position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 5;">
+      <div class="carousel-dot active" data-index="0" style="width:14px; height:14px; border-radius:50%; background: rgba(255,255,255,0.5); cursor:pointer;"></div>
+      <div class="carousel-dot" data-index="1" style="width:14px; height:14px; border-radius:50%; background: rgba(255,255,255,0.5); cursor:pointer;"></div>
+      <div class="carousel-dot" data-index="2" style="width:14px; height:14px; border-radius:50%; background: rgba(255,255,255,0.5); cursor:pointer;"></div>
+    </div>
+
+    <div class="overlay">
+      <div class="hero-content">
+        <h1>Welcome to Lakeview Community Church</h1>
+        <p>Connecting hearts to Christ</p>
+        <a href="#about" class="btn">Discover More</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="about" class="section light fade-in">
+    <div class="container">
+      <h2>About Us</h2>
+      <p>Lakeview Community Church is a Christ-centered community passionate about faith, family, and outreach. Join us for Sunday services, mid-week groups, and community events.</p>
+    </div>
+  </section>
+
+  <section id="audio" class="section dark fade-in">
+    <div class="container">
+      <h2>Recent Sermons</h2>
+      <div>
+        <h3>"Walking in Faith" - July 1</h3>
+        <audio controls>
+          <source src="sermon1.mp3" type="audio/mp3" />
+        </audio>
+      </div>
+      <div>
+        <h3>"Hope in Christ" - June 24</h3>
+        <audio controls>
+          <source src="sermon2.mp3" type="audio/mp3" />
+        </audio>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+  <section id="verse" class="section dark fade-in">
+    <div class="Versecontainer">
+      <h2>Verse of the Day</h2>
+      <blockquote id="verseText" style="margin-top: 1rem;"></blockquote>
+    </div>
+  </section>
+
+  <!-- Redesigned Location Section with Map -->
+  <section id="address" class="section light fade-in" style="padding-top: 3rem; padding-bottom: 3rem;">
+    <div class="container" style="display: flex; gap: 3rem; flex-wrap: wrap; align-items: center; justify-content: center;">
+      <div style="flex: 1 1 350px; min-width: 280px; max-width: 450px;">
+        <h2>Service details and Location</h2>
+        <p style="font-weight: 600; font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">
+          <p style="font-weight: 600; font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">
+            Morning: 09:00<br/>
+            Afternoon: 15:00
+          </p>
+          <p style="font-weight: 600; font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">Address:</p> Cnr &, Concert Blvd & Cowell Way,<br />
+          Retreat, Cape Town, 7945
+
+      </div>
+      <div style="flex: 1 1 350px; min-width: 280px; max-width: 600px;">
+        <iframe
+  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13242.645160655184!2d18.4757954!3d-34.0621458!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dcc4b5d04c0b8cf%3A0xcbbdba76aeb66c90!2sConcert%20Blvd%20%26%20Cowell%20Way%2C%20Retreat%2C%20Cape%20Town%2C%207945!5e0!3m2!1sen!2sza!4v1720270072375!5m2!1sen!2sza"
+  width="100%" height="300" style="border:0; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.15);"
+  allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="youtube" class="section light fade-in">
+    <div class="container">
+      <h2>Watch Our Latest Service</h2>
+      <p style="text-align: center; max-width: 700px; margin: 0 auto 2rem;">
+        Tune in to our latest livestream or explore past sermons on YouTube.
+      </p>
+      <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius: 12px;">
+        <iframe src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID"
+          frameborder="0" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%;">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="donate" class="section dark fade-in">
+    <div class="container">
+      <h2>Support Our Ministry</h2>
+      <p style="text-align: center; max-width: 700px; margin: 0 auto 2rem;">
+        Your generosity helps us reach more people and continue our mission of sharing God’s love.
+      </p>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+        <div style="flex: 1 1 250px; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; color: white;">
+          <h4>Bank Transfer</h4>
+          <p>Account Name: Lakeview Community Church</p>
+          <p>Bank: XYZ Bank</p>
+          <p>Account Number: 123456789</p>
+          <p>Branch Code: 000123</p>
+        </div>
+       <!-- <div style="flex: 1 1 250px; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; text-align: center; color: white;">
+          <h4>SnapScan</h4>
+          <img src="snapscan-qr.png" alt="SnapScan QR Code" style="max-width: 150px; margin-top: 1rem; border-radius: 8px;" />
+        </div>
+        <div style="flex: 1 1 250px; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; text-align: center; color: white;">
+          <h4>Online Giving</h4>
+          <a href="https://paypal.me/yourchurch" target="_blank" class="btn">Donate via PayPal</a>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section light fade-in">
+    <div class="container">
+      <h2>Contact Us</h2>
+      <form class="contact-form" id="contact-form">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+        <div id="success-message" class="success-message">Message sent successfully!</div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="fade-in">
+    <p>&copy; 2025 Designed & Developed by Alfonzo. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Mobile menu toggle
+      const toggle = document.getElementById("menu-toggle");
+      const menu = document.querySelector(".nav-links");
+      toggle.addEventListener("click", () => menu.classList.toggle("open"));
+
+      // Scroll animation
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+      // Form submission
+      const form = document.getElementById("contact-form");
+      const successMessage = document.getElementById("success-message");
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        // Simulate success (replace with your backend POST)
+        successMessage.style.display = "block";
+        form.reset();
+        setTimeout(() => { successMessage.style.display = "none"; }, 5000);
+      });
+
+      // Hero carousel
+      const slides = document.querySelectorAll(".hero-slide");
+      const dots = document.querySelectorAll(".carousel-dot");
+      let currentIndex = 0;
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+          dots[i].classList.toggle("active", i === index);
+        });
+        currentIndex = index;
+      }
+      dots.forEach(dot => {
+        dot.addEventListener("click", () => {
+          showSlide(parseInt(dot.dataset.index));
+        });
+      });
+      setInterval(() => {
+        let next = (currentIndex + 1) % slides.length;
+        showSlide(next);
+      }, 6000);
+
+      // Verse of the Day logic (basic example, replace with API if needed)
+      const verses = [
+        "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you. - Jeremiah 29:11",
+        "The Lord is my shepherd; I shall not want. - Psalm 23:1",
+        "I can do all things through Christ who strengthens me. - Philippians 4:13",
+        "Trust in the Lord with all your heart and lean not on your own understanding. - Proverbs 3:5",
+        "Be strong and courageous. Do not be afraid; do not be discouraged. - Joshua 1:9"
+      ];
+      const verseText = document.getElementById("verseText");
+      const today = new Date();
+      const dayIndex = today.getDate() % verses.length;
+      verseText.textContent = verses[dayIndex];
+    });
+  </script>
+</body>
+</html>
