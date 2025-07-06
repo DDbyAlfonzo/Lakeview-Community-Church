@@ -1,0 +1,48 @@
+header.hero {
+    background: url('hero-bg.jpg') center/cover no-repeat;
+    text-align: center;
+    padding: 6rem 1rem;
+    color: #fff;
+  }
+  header.hero h1 {
+    font-family: sans-serif;
+    font-size: 3rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .give-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap: 1rem;
+  }
+  .give-card {
+    background-size: cover;
+    color: white;
+    padding: 2rem;
+    position: relative;
+  }
+  .give-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+  }
+  .give-card * { position: relative; }
+  .media-card {
+    margin-bottom: 2rem;
+  }
+  .media-card audio {
+    width: 100%;
+    border-radius: 4px;
+  }
+    
